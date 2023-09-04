@@ -1,0 +1,49 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement; // Include this if you want to load a new scene
+
+public class SongSelectionController : MonoBehaviour {
+    public ScrollRect scrollRect;
+    public int numberOfSongs; // Total number of songs in the list
+    private int currentSongIndex = 0; // Index of the currently selected song
+    private float targetScrollPosition; // Target scroll position
+    public float scrollSpeed = 5f; // Speed of scrolling
+    private List<AudioSource> audioSources = new List<AudioSource>();
+    private AudioSource currentAudio;
+    private int index;
+
+
+    void Start() {
+        targetScrollPosition = 1f;
+        currentAudio = audioSources.IndexOf()
+    }
+
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.DownArrow)) {
+            // Increment the current song index, wrapping around if necessary
+            currentSongIndex = Mathf.Min(currentSongIndex + 1, numberOfSongs - 1);
+            // Calculate the new target scroll position based on the current song index
+            targetScrollPosition = 1f - (float)currentSongIndex / (numberOfSongs - 1);
+        } else if (Input.GetKeyDown(KeyCode.UpArrow)) {
+            // Decrement the current song index, wrapping around if necessary
+            currentSongIndex = Mathf.Max(currentSongIndex - 1, 0);
+            // Calculate the new target scroll position based on the current song index
+            targetScrollPosition = 1f - (float)currentSongIndex / (numberOfSongs - 1);
+        } else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) {
+            LoadSelectedSong();
+        }
+
+        // Smoothly interpolate the scroll position
+        scrollRect.verticalNormalizedPosition = Mathf.MoveTowards(scrollRect.verticalNormalizedPosition, targetScrollPosition, scrollSpeed * Time.deltaTime);
+    }
+
+    void LoadSelectedSong()
+    {
+        // Load the scene corresponding to the selected song
+        //if (currentSongIndex >= 0 && currentSongIndex < songScenes.Length) {
+            // SceneManager.LoadScene();
+        //}
+    }
+}

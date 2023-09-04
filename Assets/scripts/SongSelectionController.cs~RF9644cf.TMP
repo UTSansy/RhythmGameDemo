@@ -1,0 +1,75 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System;
+using System.Linq;
+
+public class SongSelectionController : MonoBehaviour {
+    public ScrollRect scrollRect;
+    private int currentSongIndex = 0; // Index of the currently selected song
+    private float targetScrollPosition; // Target scroll position
+    public float scrollSpeed = 5f; // Speed of scrolling
+    public List<AudioSource> audioSources = new List<AudioSource>();
+    private AudioSource currentAudio;
+    private int index = 0;
+    private int maxSong;
+    public GameObject Passing;
+    // private bool indexChange = false;
+
+
+    void Start() {
+
+        Passing = GameObject.FindGameObjectWithTag("Passing");
+        if (Passing != null)
+        {
+            Debug.Log("find");
+        }
+        //GameObject go = new GameObject("Passing");
+
+        targetScrollPosition = 1f;
+        maxSong = audioSources.Count();
+        for (int i = 0; i < maxSong; i++) {
+            audioSources[i].Play();
+            audioSources[i].Stop();
+        }
+        currentAudio = audioSources[index];
+        currentAudio.Play();
+        // Passing.SetAudio(currentAudio);
+    }
+
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.DownArrow)) {
+            index = (index + 1) % maxSong;
+            
+            currentSongIndex = Mathf.Min(currentSongIndex + 1, maxSong - 1);
+            targetScrollPosition = 1f - (float)currentSongIndex / (maxSong - 1);
+
+            currentAudio.Stop();
+            currentAudio = audioSources[index];
+            currentAudio.Play();
+        } else if (Input.GetKeyDown(KeyCode.UpArrow)) {
+            if (index == 0) {
+                index = maxSong - 1;
+            } else {
+                index--;
+            }
+            currentSongIndex = Mathf.Max(currentSongIndex - 1, 0);
+            targetScrollPosition = 1f - (float)currentSongIndex / (maxSong - 1);
+
+            currentAudio.Stop();
+            currentAudio = audioSources[index];
+            currentAudio.Play();
+        } else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) {
+            LoadSelectedSong();
+        }
+
+        scrollRect.verticalNormalizedPosition = Mathf.MoveTowards(scrollRect.verticalNormalizedPosition, targetScrollPosition, scrollSpeed * Time.deltaTime);
+    }
+
+    void LoadSelectedSong() {
+        // DontDestroyOnLoad();
+        // SceneManager.LoadScene("游玩界面");
+    }
+}
